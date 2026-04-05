@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": ["Read(**)", "Bash(ls *)", "Bash(cat *)", "Bash(grep *)", "Bash(git status)", "Bash(git log *)", "Bash(git diff *)", "Bash(npm test *)", "Bash(npx jest *)", "Bash(npx vitest *)", "Bash(python -m pytest *)"],
+    "deny": ["Edit(**)", "Write(**)", "Bash(rm *)", "Bash(mv *)", "Bash(git add *)", "Bash(git commit *)", "Bash(git push *)", "Bash(npm install *)", "Bash(curl *)"]
+  },
+  "customInstructions": "VERIFY mode. Read + test only. Cannot write or edit files."
+}

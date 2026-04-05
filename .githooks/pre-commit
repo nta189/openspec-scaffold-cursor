@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# .githooks/pre-commit — Runs before every commit
+# Fail-closed: a failure here blocks the commit.
+# Bypass with: git commit --no-verify (use sparingly)
+
+set -euo pipefail
+
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+
+echo "── Pre-commit checks ──────────────────────────"
+
+# 1. Check for secrets
+if [ -f "$PROJECT_ROOT/scripts/check-secrets.sh" ]; then
+  bash "$PROJECT_ROOT/scripts/check-secrets.sh"
+else
+  echo "  ⚠ scripts/check-secrets.sh not found. Skipping secret scan."
+fi
+
+# 2. Run lint-staged if available
+if command -v npx &>/dev/null && [ -f "$PROJECT_ROOT/package.json" ]; then
+  if grep -q "lint-staged" "$PROJECT_ROOT/package.json" 2>/dev/null; then
+    echo ""
+    echo "→ Running lint-staged..."
+    npx lint-staged 2>/dev/null || {
+      echo "  ✗ Lint-staged failed. Fix linting errors before committing."
+      exit 1
+    }
+    echo "  ✓ Lint-staged passed"
+  fi
+fi
+
+# 3. Check for TODO/FIXME in staged files (warning only)
+echo ""
+echo "→ Checking for TODOs in staged files..."
+STAGED=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
+TODO_COUNT=0
+
+for file in $STAGED; do
+  if [ -f "$file" ]; then
+    todos=$(grep -n "TODO\|FIXME\|HACK\|XXX" "$file" 2>/dev/null || true)
+    if [ -n "$todos" ]; then
+      echo "  ⚠ $file:"
+      echo "$todos" | head -3 | while IFS= read -r line; do
+        echo "    $line"
+      done
+      TODO_COUNT=$((TODO_COUNT + 1))
+    fi
+  fi
+done
+
+if [ "$TODO_COUNT" -gt 0 ]; then
+  echo "  ⚠ $TODO_COUNT file(s) contain TODOs. Consider resolving before merge."
+else
+  echo "  ✓ No TODOs found"
+fi
+
+# 4. Verify no protected files are being committed
+echo ""
+echo "→ Checking for protected file modifications..."
+PROTECTED_FILES=(".env" ".env.local" ".env.production" "*.key" "*.pem")
+PROTECTED_FOUND=0
+
+for pattern in "${PROTECTED_FILES[@]}"; do
+  matches=$(echo "$STAGED" | grep -E "$(echo "$pattern" | sed 's/\*/.*/')" 2>/dev/null || true)
+  if [ -n "$matches" ]; then
+    echo "  ✗ BLOCKED: $matches matches protected pattern '$pattern'"
+    PROTECTED_FOUND=$((PROTECTED_FOUND + 1))
+  fi
+done
+
+if [ "$PROTECTED_FOUND" -gt 0 ]; then
+  echo "  ✗ $PROTECTED_FOUND protected file(s) in commit. Remove them."
+  exit 1
+else
+  echo "  ✓ No protected files in commit"
+fi
+
+echo ""
+echo "── Pre-commit checks passed ─────────────────"

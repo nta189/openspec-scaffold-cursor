@@ -1,0 +1,79 @@
+{
+  "_comment": "Extended settings for the enhanced claude code system. Referenced by SAFETY.md, MEMORY.md, and IMPLEMENTATION.md.",
+  "_enforcement_note": "This file is a reference document. Actual permission enforcement lives in .claude/settings.json and .claude/modes/*.json which use native Claude Code permission syntax. The patterns below are for documentation and human review only.",
+
+  "permission_mode": "allow_edits",
+
+  "approved_patterns": {
+    "file_write": ["src/**", "tests/**", "docs/**", "features/**", "tmp/**"],
+    "shell_readonly": ["ls", "cat", "grep", "rg", "find", "wc", "head", "tail", "git status", "git log", "git diff", "git branch", "npm test", "npx jest", "npx vitest", "python -m pytest"],
+    "shell_mutating": ["git add", "git commit", "npm install", "npm run build", "npx lint-staged"]
+  },
+
+  "denied_patterns": {
+    "file_write": ["*.env", "*.env.*", "*.key", "*.pem", "*.secret", ".claude/settings.json", "project.settings.json"],
+    "file_delete": ["*"],
+    "shell_mutating": ["rm -rf *", "DROP TABLE", "TRUNCATE", "git push --force", "git rebase", "curl -X POST", "curl -X PUT", "curl -X DELETE"]
+  },
+
+  "compaction": {
+    "micro_compact_interval_turns": 5,
+    "micro_compact_max_age_turns": 10,
+    "context_collapse_threshold": 0.70,
+    "session_memory_threshold": 0.85,
+    "full_compact_threshold": 0.95,
+    "ptl_truncation_threshold": 1.00,
+    "tool_result_preview_bytes": 8192
+  },
+
+  "session": {
+    "checkpoint_interval_turns": 10,
+    "session_dir": "./sessions",
+    "session_memory_dir": "./tmp/session-memory",
+    "tool_results_dir": "./tmp/tool-results"
+  },
+
+  "agent_types": {
+    "explore": {
+      "allowed_tools": ["file_read", "search", "web_fetch", "git_status", "git_log", "git_diff"],
+      "prohibited_tools": ["file_write", "file_delete", "shell_mutating", "git_commit", "git_push", "api_write"]
+    },
+    "plan": {
+      "allowed_tools": ["file_read", "search"],
+      "prohibited_tools": ["file_write", "file_delete", "shell_execute", "git_commit", "git_push", "api_write"]
+    },
+    "implement": {
+      "allowed_tools": ["*"],
+      "prohibited_tools": [],
+      "_note": "Full access, still gated by permission tiers in SAFETY.md"
+    },
+    "verify": {
+      "allowed_tools": ["file_read", "shell_readonly", "test_runners"],
+      "prohibited_tools": ["file_write", "file_delete", "git_push", "api_write"]
+    },
+    "guide": {
+      "allowed_tools": ["file_read", "search"],
+      "prohibited_tools": ["file_write", "file_delete", "shell_execute", "git_commit", "git_push", "api_write"]
+    }
+  },
+
+  "hooks": {
+    "session-start": [
+      { "type": "command", "run": "bash scripts/session-init.sh" }
+    ],
+    "pre-commit": [
+      { "type": "command", "run": "npx lint-staged", "fail_policy": "closed" },
+      { "type": "command", "run": "bash scripts/check-secrets.sh", "fail_policy": "closed" }
+    ],
+    "session-end": [
+      { "type": "command", "run": "bash scripts/checkpoint.sh" }
+    ]
+  },
+
+  "audit": {
+    "log_dir": "./logs",
+    "permission_log": "./logs/permission-audit.jsonl",
+    "flag_log": "./logs/safety-flags.jsonl",
+    "retention_days": 30
+  }
+}

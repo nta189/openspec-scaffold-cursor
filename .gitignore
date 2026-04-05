@@ -1,0 +1,39 @@
+# Enhanced Claude Code System — Runtime directories
+# These contain session-specific data that should not be version controlled
+
+# Session files
+sessions/*
+!sessions/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# Temporary working directories
+tmp/tool-results/*
+tmp/session-memory/*
+tmp/mailbox/*
+tmp/forks/*
+tmp/worktrees/*
+!tmp/**/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Node (if used in target project)
+node_modules/
+package-lock.json
+
+# Python (if used in target project)
+__pycache__/
+*.pyc
+.venv/
+.claude/settings.json.backup

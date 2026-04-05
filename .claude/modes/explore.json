@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(find *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git branch *)"
+    ],
+    "deny": [
+      "Edit(**)",
+      "Write(**)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(touch *)",
+      "Bash(mkdir *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git checkout *)",
+      "Bash(npm install *)",
+      "Bash(pip install *)",
+      "Bash(curl *)",
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/modes/*)",
+      "Edit(project.settings.json)",
+      "Edit(CLAUDE.md)",
+      "Edit(AGENT.md)",
+      "Edit(SAFETY.md)",
+      "Edit(MEMORY.md)",
+      "Edit(IMPLEMENTATION.md)",
+      "Edit(DECISIONS.md)"
+    ]
+  },
+  "customInstructions": "You are in EXPLORE mode. Read-only. You cannot write, create, edit, or delete files. These restrictions are enforced structurally. If the task requires mutations, tell the user to run: bash scripts/switch-mode.sh implement"
+}

@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(find *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(npm test *)",
+      "Bash(npx jest *)",
+      "Bash(npx vitest *)",
+      "Bash(python -m pytest *)",
+      "Bash(bash scripts/verify-harness.sh)",
+      "Bash(bash scripts/test-system.sh)"
+    ],
+    "deny": [
+      "Edit(**)",
+      "Write(**)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npm install *)",
+      "Bash(pip install *)",
+      "Bash(curl *)",
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/modes/*)",
+      "Edit(project.settings.json)",
+      "Edit(CLAUDE.md)",
+      "Edit(AGENT.md)",
+      "Edit(SAFETY.md)",
+      "Edit(MEMORY.md)",
+      "Edit(IMPLEMENTATION.md)",
+      "Edit(DECISIONS.md)"
+    ]
+  },
+  "customInstructions": "You are in VERIFY mode. You can read files and run tests, but cannot write, create, or edit files. Your job is to verify, not fix. If fixes are needed, report them and tell the user to run: bash scripts/switch-mode.sh implement"
+}

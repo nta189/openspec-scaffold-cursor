@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": ["Read(**)", "Edit(src/**)", "Edit(tests/**)", "Edit(docs/**)", "Write(src/**)", "Write(tests/**)", "Bash(ls *)", "Bash(cat *)", "Bash(grep *)", "Bash(git status)", "Bash(git log *)", "Bash(git diff *)", "Bash(git add *)", "Bash(git commit *)", "Bash(npm run *)", "Bash(npm test *)", "Bash(npm install *)"],
+    "deny": ["Bash(rm -rf *)", "Bash(git push --force *)", "Bash(git rebase *)", "Read(.env)", "Read(.env.*)", "Edit(.env)", "Edit(.env.*)", "Edit(.claude/settings.json)"]
+  },
+  "customInstructions": "IMPLEMENT mode. Full access with safety deny list."
+}

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": ["Read(**)", "Bash(ls *)", "Bash(cat *)", "Bash(grep *)", "Bash(rg *)", "Bash(find *)", "Bash(git status)", "Bash(git log *)", "Bash(git diff *)"],
+    "deny": ["Edit(**)", "Write(**)", "Bash(rm *)", "Bash(mv *)", "Bash(git add *)", "Bash(git commit *)", "Bash(git push *)", "Bash(npm install *)", "Bash(curl *)"]
+  },
+  "customInstructions": "EXPLORE mode. Read-only. Cannot write, edit, or delete files."
+}

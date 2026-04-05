@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(find *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)"
+    ],
+    "deny": [
+      "Edit(**)",
+      "Write(**)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(touch *)",
+      "Bash(mkdir *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npm *)",
+      "Bash(pip *)",
+      "Bash(npx *)",
+      "Bash(python *)",
+      "Bash(node *)",
+      "Bash(curl *)",
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/modes/*)",
+      "Edit(project.settings.json)",
+      "Edit(CLAUDE.md)",
+      "Edit(AGENT.md)",
+      "Edit(SAFETY.md)",
+      "Edit(MEMORY.md)",
+      "Edit(IMPLEMENTATION.md)",
+      "Edit(DECISIONS.md)"
+    ]
+  },
+  "customInstructions": "You are in PLAN mode. Read and analyze only. You cannot write files, run commands, or execute tests. These restrictions are enforced structurally. If the task requires implementation, tell the user to run: bash scripts/switch-mode.sh implement"
+}
