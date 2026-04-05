@@ -99,7 +99,7 @@ echo "→ Safety flag log rotation..."
 FLAG_LOG="$PROJECT_ROOT/logs/safety-flags.jsonl"
 if [ -f "$FLAG_LOG" ]; then
   # Only archive resolved flags. Active flags stay.
-  resolved=$(grep -cE '"resolution": *("cleared"|"resolved")' "$FLAG_LOG" 2>/dev/null || echo "0")
+  resolved=$(grep -cE '"resolution": *("cleared"|"resolved")' "$FLAG_LOG" 2>/dev/null || true)
   if [ "$resolved" -gt 50 ]; then
     echo "  $resolved resolved flags eligible for archival"
     if [ "$DRY_RUN" != "--dry-run" ]; then

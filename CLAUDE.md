@@ -98,7 +98,7 @@ Every capability the agent can invoke is classified here. This registry is the s
 
 **Tier definitions** (see `SAFETY.md` for enforcement):
 - **Allowed:** No approval needed. Always available.
-- **Guarded:** Allowed with logging. Can be revoked by safety flags.
+- **Guarded:** First-use approval per session, then auto-approved. Always logged. Revoked on safety flag.
 - **Restricted:** Requires explicit approval. Never auto-approved.
 
 **Partitioning rules** (see `IMPLEMENTATION.md` for execution):

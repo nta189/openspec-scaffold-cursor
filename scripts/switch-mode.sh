@@ -27,7 +27,7 @@ fi
 cp "$SETTINGS" "$SETTINGS.backup" 2>/dev/null || true
 
 # Merge mode permissions into settings.json, preserving hooks and other keys
-python3 -c "
+if ! python3 -c "
 import json, sys
 
 with open('$SETTINGS') as f:
@@ -46,11 +46,8 @@ if 'customInstructions' in mode:
 with open('$SETTINGS', 'w') as f:
     json.dump(current, f, indent=2)
     f.write('\n')
-" 2>/dev/null
-
-if [ $? -ne 0 ]; then
+" 2>/dev/null; then
   echo "✗ Mode switch failed (python3 required for merge)"
-  # Fallback: restore backup
   cp "$SETTINGS.backup" "$SETTINGS" 2>/dev/null || true
   exit 1
 fi

@@ -88,14 +88,14 @@ Never silently work around a missing tool.
 Hooks attach custom logic to agent lifecycle events without modifying core behavior.
 
 ### Event Points
+Claude Code's actual lifecycle events:
+
 | Event | Fires When | Common Uses |
 |-------|-----------|-------------|
-| `session-start` | New session begins or resumes | Load project context, check git status, validate environment |
-| `pre-tool` | Before any tool executes | Validate inputs, check permissions, log intent |
-| `post-tool` | After any tool completes | Format output, update state, trigger follow-up |
-| `pre-commit` | Before git commit | Run linter, check for secrets, validate commit message |
-| `session-end` | Session concludes or is paused | Extract session memory, write compaction summary, update DECISIONS.md |
-| `compaction-trigger` | Context budget threshold crossed | Custom compaction logic, priority-based retention |
+| `PreToolUse` | Before any tool executes | Validate inputs, check permissions, log intent |
+| `PostToolUse` | After any tool completes | Format output, run linters/formatters on written files |
+| `Stop` | Agent turn ends (session idle or complete) | Extract session memory, write checkpoint, update DECISIONS.md |
+| `Notification` | Agent sends a notification | Custom notification routing, logging |
 
 ### Hook Types
 | Type | Execution | Example |
@@ -111,16 +111,32 @@ Hooks attach custom logic to agent lifecycle events without modifying core behav
 - Exception: `pre-commit` hooks are fail-closed. A linting failure blocks the commit.
 
 ### Hook Registration
-Hooks are defined in `settings.json` (or equivalent project config):
+Hooks are defined in `settings.json` using the Claude Code hook API format:
 ```json
 {
   "hooks": {
-    "pre-commit": [
-      { "type": "command", "run": "npx lint-staged" },
-      { "type": "command", "run": "npx secretlint" }
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "echo 'pre-tool validation'" }
+        ]
+      }
     ],
-    "session-start": [
-      { "type": "prompt", "inject": "Active branch: $(git branch --show-current)" }
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash scripts/checkpoint.sh auto idle 'session end' 2>/dev/null || true" }
+        ]
+      }
     ]
   }
 }

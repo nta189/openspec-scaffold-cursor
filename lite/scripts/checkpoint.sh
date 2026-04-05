@@ -29,9 +29,14 @@ else
   SEQUENCE=1
 fi
 
-# Collect state
-BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
-UNCOMMITTED=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+# Collect state (guard for non-git environments)
+if git rev-parse --is-inside-work-tree &>/dev/null; then
+  BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+  UNCOMMITTED=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+else
+  BRANCH="no-git"
+  UNCOMMITTED=0
+fi
 
 # Count active flags (handle both compact and spaced JSON formats)
 FLAG_LOG="$PROJECT_ROOT/logs/safety-flags.jsonl"
@@ -68,11 +73,25 @@ print(json.dumps(modules))
 " 2>/dev/null || echo "[]")
 fi
 
-# Build checkpoint record
-CHECKPOINT=$(cat <<EOF
-{"type":"checkpoint","timestamp":"$TIMESTAMP","session_id":"$SESSION_ID","sequence":$SEQUENCE,"data":{"workflow_state":"$WORKFLOW_STATE","branch":"$BRANCH","uncommitted_changes":$UNCOMMITTED,"active_flags":$ACTIVE_FLAGS,"loaded_modules":$LOADED_MODULES,"notes":"$NOTES"}}
-EOF
-)
+# Build checkpoint record safely using Python to handle special characters
+CHECKPOINT=$(python3 -c "
+import json, sys
+record = {
+    'type': 'checkpoint',
+    'timestamp': sys.argv[1],
+    'session_id': sys.argv[2],
+    'sequence': int(sys.argv[3]),
+    'data': {
+        'workflow_state': sys.argv[4],
+        'branch': sys.argv[5],
+        'uncommitted_changes': int(sys.argv[6]),
+        'active_flags': int(sys.argv[7]),
+        'loaded_modules': json.loads(sys.argv[8]),
+        'notes': sys.argv[9]
+    }
+}
+print(json.dumps(record))
+" "$TIMESTAMP" "$SESSION_ID" "$SEQUENCE" "$WORKFLOW_STATE" "$BRANCH" "$UNCOMMITTED" "$ACTIVE_FLAGS" "$LOADED_MODULES" "$NOTES")
 
 # Append to session file
 echo "$CHECKPOINT" >> "$SESSION_FILE"

@@ -10,6 +10,9 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PERIOD="${2:-30}"
 JSON_OUTPUT="${1:-}"
 
+active_flags=0
+stale_memory=0
+
 echo "═══════════════════════════════════════════════════════"
 echo "  System Stats — Last $PERIOD Days"
 echo "═══════════════════════════════════════════════════════"
@@ -28,7 +31,7 @@ if [ -d "$SESSION_DIR" ]; then
   
   for f in $(find "$SESSION_DIR" -name "*.jsonl" -mtime -"$PERIOD" 2>/dev/null); do
     records=$(wc -l < "$f" | tr -d ' ')
-    checkpoints=$(grep -c '"type":"checkpoint"' "$f" 2>/dev/null || echo 0)
+    checkpoints=$(grep -c '"type":"checkpoint"' "$f" 2>/dev/null || true)
     total_records=$((total_records + records))
     total_checkpoints=$((total_checkpoints + checkpoints))
   done
@@ -56,8 +59,8 @@ echo "→ Safety Flags"
 FLAG_LOG="$PROJECT_ROOT/logs/safety-flags.jsonl"
 if [ -f "$FLAG_LOG" ]; then
   total_flags=$(wc -l < "$FLAG_LOG" | tr -d ' ')
-  active_flags=$(grep -cE '"resolution": *(null|"pending")' "$FLAG_LOG" 2>/dev/null || echo 0)
-  cleared_flags=$(grep -cE '"resolution": *"cleared"' "$FLAG_LOG" 2>/dev/null || echo 0)
+  active_flags=$(grep -cE '"resolution": *(null|"pending")' "$FLAG_LOG" 2>/dev/null || true)
+  cleared_flags=$(grep -cE '"resolution": *"cleared"' "$FLAG_LOG" 2>/dev/null || true)
   
   echo "  Total flags (all time): $total_flags"
   echo "  Currently active:       $active_flags"
@@ -81,7 +84,7 @@ for cat, count in cats.most_common(10):
   # Flags by severity
   echo "  By severity:"
   for sev in P0 P1 P2; do
-    count=$(grep -c "\"severity\":\"$sev\"" "$FLAG_LOG" 2>/dev/null || echo 0)
+    count=$(grep -c "\"severity\":\"$sev\"" "$FLAG_LOG" 2>/dev/null || true)
     echo "    $sev: $count"
   done
 else
@@ -97,10 +100,10 @@ echo "→ Permission Decisions"
 PERM_LOG="$PROJECT_ROOT/logs/permission-audit.jsonl"
 if [ -f "$PERM_LOG" ]; then
   total_perms=$(wc -l < "$PERM_LOG" | tr -d ' ')
-  approved=$(grep -c '"decision":"approved"' "$PERM_LOG" 2>/dev/null || echo 0)
-  denied=$(grep -c '"decision":"denied"' "$PERM_LOG" 2>/dev/null || echo 0)
-  auto_approved=$(grep -c '"decision":"auto_approved"' "$PERM_LOG" 2>/dev/null || echo 0)
-  destructive=$(grep -c '"destructive:' "$PERM_LOG" 2>/dev/null || echo 0)
+  approved=$(grep -c '"decision":"approved"' "$PERM_LOG" 2>/dev/null || true)
+  denied=$(grep -c '"decision":"denied"' "$PERM_LOG" 2>/dev/null || true)
+  auto_approved=$(grep -c '"decision":"auto_approved"' "$PERM_LOG" 2>/dev/null || true)
+  destructive=$(grep -c '"destructive:' "$PERM_LOG" 2>/dev/null || true)
   
   echo "  Total decisions:   $total_perms"
   echo "  Approved:          $approved"
@@ -140,10 +143,10 @@ echo "→ Architectural Decisions"
 
 DECISIONS="$PROJECT_ROOT/DECISIONS.md"
 if [ -f "$DECISIONS" ]; then
-  total_adrs=$(grep -c "^### ADR-" "$DECISIONS" 2>/dev/null || echo 0)
-  accepted=$(grep -c "accepted" "$DECISIONS" 2>/dev/null || echo 0)
-  superseded=$(grep -c "superseded" "$DECISIONS" 2>/dev/null || echo 0)
-  deprecated=$(grep -c "deprecated" "$DECISIONS" 2>/dev/null || echo 0)
+  total_adrs=$(grep -c "^### ADR-" "$DECISIONS" 2>/dev/null || true)
+  accepted=$(grep -c '^\*\*Status:\*\* accepted' "$DECISIONS" 2>/dev/null || true)
+  superseded=$(grep -c '^\*\*Status:\*\* superseded' "$DECISIONS" 2>/dev/null || true)
+  deprecated=$(grep -c '^\*\*Status:\*\* deprecated' "$DECISIONS" 2>/dev/null || true)
   
   echo "  Total ADRs:    $total_adrs"
   echo "  Accepted:      $accepted"

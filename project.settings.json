@@ -1,6 +1,5 @@
 {
-  "_comment": "Extended settings for the enhanced claude code system. Referenced by SAFETY.md, MEMORY.md, and IMPLEMENTATION.md.",
-  "_enforcement_note": "This file is a reference document. Actual permission enforcement lives in .claude/settings.json and .claude/modes/*.json which use native Claude Code permission syntax. The patterns below are for documentation and human review only.",
+  "_comment": "REFERENCE ONLY. Not enforced by Claude Code. Runtime enforcement is in .claude/settings.json and .claude/modes/*.json.",
 
   "permission_mode": "allow_edits",
 

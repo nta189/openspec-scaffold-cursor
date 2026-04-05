@@ -10,7 +10,7 @@ echo "── Session Init ──────────────────
 
 # 1. Report current branch and status
 echo ""
-if git rev-parse --is-inside-work-tree 2>/dev/null; then
+if git rev-parse --is-inside-work-tree &>/dev/null; then
   echo "Branch: $(git branch --show-current 2>/dev/null || echo 'detached')"
   echo "Status: $(git status --porcelain 2>/dev/null | wc -l | tr -d ' ') uncommitted changes"
 else
@@ -34,7 +34,7 @@ fi
 # 3. Show last 5 decisions
 DECISIONS="$PROJECT_ROOT/DECISIONS.md"
 if [ -f "$DECISIONS" ]; then
-  decision_count=$(grep -c "^### ADR-" "$DECISIONS" 2>/dev/null || echo "0")
+  decision_count=$(grep -c "^### ADR-" "$DECISIONS" 2>/dev/null || true)
   if [ "$decision_count" -gt 0 ]; then
     echo ""
     echo "Recent decisions ($decision_count total):"
@@ -68,7 +68,7 @@ if [ -d "$SESSION_DIR" ]; then
 fi
 
 # 6. Disk check on tmp directories
-tmp_size=$(du -sh "$PROJECT_ROOT/tmp" 2>/dev/null | cut -f1 || echo "0")
+tmp_size=$(du -sh "$PROJECT_ROOT/tmp" 2>/dev/null | cut -f1 || true)
 echo ""
 echo "Tmp directory size: $tmp_size"
 

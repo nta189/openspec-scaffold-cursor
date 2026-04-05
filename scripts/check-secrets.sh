@@ -9,7 +9,7 @@ echo "→ Scanning for secrets in staged files..."
 # Patterns that indicate potential secrets
 PATTERNS=(
   'AKIA[0-9A-Z]{16}'                    # AWS Access Key
-  'sk-[a-zA-Z0-9]{20,}'                 # OpenAI / Stripe secret key
+  'sk-[a-zA-Z0-9_-]{20,}'                 # OpenAI / Stripe secret key
   'ghp_[a-zA-Z0-9]{36}'                 # GitHub personal access token
   'xoxb-[0-9]+-[a-zA-Z0-9]+'           # Slack bot token
   'xoxp-[0-9]+-[a-zA-Z0-9]+'           # Slack user token

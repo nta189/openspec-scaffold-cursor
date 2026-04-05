@@ -9,7 +9,7 @@
 | Parameter | Default | Notes |
 |-----------|---------|-------|
 | Context window | 200,000 tokens | Extend to 1M only for large analysis tasks |
-| System prompt reserve | 4,000 tokens | CLAUDE.md + SAFETY.md — never compacted |
+| System prompt reserve | 6,000 tokens | CLAUDE.md + SAFETY.md — never compacted |
 | Module reserve | 2,000 tokens per loaded module | Compacted only via session memory extraction |
 | Working context | Remaining tokens after reserves | Where conversation, tool results, and reasoning live |
 | Tool result preview limit | 8 KB | Full results saved to `./tmp/tool-results/` |

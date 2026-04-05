@@ -67,6 +67,12 @@ fi
 mkdir -p .claude/commands
 echo "✓ Agent skill directory created"
 
+# Copy skills as Claude Code commands
+if [ -d "$SCRIPT_DIR/skills" ]; then
+  cp "$SCRIPT_DIR/skills/"*.md "$PROJECT_DIR/.claude/commands/" 2>/dev/null || true
+  echo "  ✓ Agent skills copied to .claude/commands/"
+fi
+
 # 5. Copy SCAFFOLD as the builder prompt
 cp "$SCRIPT_DIR/SCAFFOLD.md" ./prompt.md
 echo "✓ SCAFFOLD.md copied as prompt.md"

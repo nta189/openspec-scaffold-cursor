@@ -32,8 +32,9 @@
       "Bash(python -m pytest *)"
     ],
     "deny": [
-      "Bash(rm -rf *)",
-      "Bash(git push --force *)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(git push *)",
       "Bash(git rebase *)",
       "Bash(curl -X POST *)",
       "Bash(curl -X PUT *)",
@@ -45,7 +46,10 @@
       "Edit(*.key)",
       "Edit(*.pem)",
       "Edit(.claude/settings.json)",
+      "Edit(.claude/settings.local.json)",
+      "Write(.claude/settings.local.json)",
       "Edit(.claude/modes/*)",
+      "Edit(scripts/*)",
       "Edit(project.settings.json)",
       "Edit(CLAUDE.md)",
       "Edit(AGENT.md)",

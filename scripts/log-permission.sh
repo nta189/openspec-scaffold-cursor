@@ -49,18 +49,18 @@ esac
 python3 -c "
 import json, sys
 record = {
-    'timestamp': '$TIMESTAMP',
-    'session_id': '$SESSION_ID',
-    'tool': sys.argv[1],
-    'command': sys.argv[2],
-    'tier': sys.argv[3],
-    'classification': sys.argv[4],
-    'decision': sys.argv[5],
-    'decided_by': sys.argv[6],
-    'mode': sys.argv[7],
-    'context': sys.argv[8]
+    'timestamp': sys.argv[1],
+    'session_id': sys.argv[2],
+    'tool': sys.argv[3],
+    'command': sys.argv[4],
+    'tier': sys.argv[5],
+    'classification': sys.argv[6],
+    'decision': sys.argv[7],
+    'decided_by': sys.argv[8],
+    'mode': sys.argv[9],
+    'context': sys.argv[10]
 }
 print(json.dumps(record))
-" "$TOOL" "$COMMAND" "$TIER" "$CLASSIFICATION" "$DECISION" "$DECIDED_BY" "$MODE" "$CONTEXT" >> "$AUDIT_LOG"
+" "$TIMESTAMP" "$SESSION_ID" "$TOOL" "$COMMAND" "$TIER" "$CLASSIFICATION" "$DECISION" "$DECIDED_BY" "$MODE" "$CONTEXT" >> "$AUDIT_LOG"
 
 echo "✓ Permission logged: $TOOL ($DECISION by $DECIDED_BY)"

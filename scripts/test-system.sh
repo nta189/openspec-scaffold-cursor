@@ -82,7 +82,7 @@ deny = d.get('permissions', {}).get('deny', [])
 # Check that append-only protection exists in instructions (SQL can't be blocked via tool permissions)
 has_instruction = 'append-only' in ci.lower() or 'UPDATE' in ci or 'DELETE' in ci
 # Also verify dangerous bash patterns are denied
-has_bash_deny = any('rm -rf' in x for x in deny)
+has_bash_deny = any('rm' in x for x in deny)
 exit(0 if (has_instruction and has_bash_deny) else 1)
 " 2>/dev/null; then
     log_pass "Implement mode structurally protects append-only tables"

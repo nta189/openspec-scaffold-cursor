@@ -29,6 +29,8 @@
       "Bash(node *)",
       "Bash(curl *)",
       "Edit(.claude/settings.json)",
+      "Edit(.claude/settings.local.json)",
+      "Write(.claude/settings.local.json)",
       "Edit(.claude/modes/*)",
       "Edit(project.settings.json)",
       "Edit(CLAUDE.md)",

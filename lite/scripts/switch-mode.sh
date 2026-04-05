@@ -2,7 +2,7 @@
 # scripts/switch-mode.sh — Swap .claude/settings.json based on agent type
 # This makes agent type constraints STRUCTURAL, not just instructional.
 #
-# Usage: bash scripts/switch-mode.sh <explore|plan|implement|verify|guide>
+# Usage: bash scripts/switch-mode.sh <explore|implement|verify>
 #
 # How it works:
 #   Each mode has a pre-built settings file in .claude/modes/
@@ -15,11 +15,11 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODES_DIR="$PROJECT_ROOT/.claude/modes"
 SETTINGS="$PROJECT_ROOT/.claude/settings.json"
 
-MODE="${1:?Usage: switch-mode.sh <explore|plan|implement|verify|guide>}"
+MODE="${1:?Usage: switch-mode.sh <explore|implement|verify>}"
 
 if [ ! -f "$MODES_DIR/${MODE}.json" ]; then
   echo "✗ Unknown mode: $MODE"
-  echo "  Available: explore, plan, implement, verify, guide"
+  echo "  Available: explore, implement, verify"
   exit 1
 fi
 
@@ -27,7 +27,7 @@ fi
 cp "$SETTINGS" "$SETTINGS.backup" 2>/dev/null || true
 
 # Merge mode permissions into settings.json, preserving hooks and other keys
-python3 -c "
+if ! python3 -c "
 import json, sys
 
 with open('$SETTINGS') as f:
@@ -46,11 +46,8 @@ if 'customInstructions' in mode:
 with open('$SETTINGS', 'w') as f:
     json.dump(current, f, indent=2)
     f.write('\n')
-" 2>/dev/null
-
-if [ $? -ne 0 ]; then
+" 2>/dev/null; then
   echo "✗ Mode switch failed (python3 required for merge)"
-  # Fallback: restore backup
   cp "$SETTINGS.backup" "$SETTINGS" 2>/dev/null || true
   exit 1
 fi
