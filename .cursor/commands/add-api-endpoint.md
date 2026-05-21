@@ -1,13 +1,9 @@
 # Add API Endpoint
 
-Read `@IMPLEMENTATION.md` and `@openspec/config.yaml`. Include `@openspec/specs/<domain>/spec.md`.
+`@openspec/specs/<domain>/spec.md` `@IMPLEMENTATION.md`
 
-**Inputs:** domain, method, path, scenario (GIVEN/WHEN/THEN)
+Inputs: domain, method, path, scenario.
 
-**Steps:**
-1. Implement route in `src/<domain>/routes.ts` — validation, auth, RBAC, service call, structured errors
-2. Implement service in `src/<domain>/service.ts` — parameterized queries, audit log if sensitive
-3. Add tests: happy path, 401, 403, 400 validation, injection resistance
-4. Update traceability: requirement → scenario → test path
+Implement route (auth, validation, RBAC) + service (parameterized queries) + tests: happy, 401, 403, 400, injection.
 
-**Verify:** route + service + 5 test categories + traceability entry. Report PASS/FAIL.
+Report PASS/FAIL per check.

@@ -158,3 +158,18 @@ This repository is a **high-quality, production-oriented AI agent operating syst
 ---
 
 *This assessment is the canonical pre-migration score. Re-score after P1–P3 complete.*
+
+---
+
+## Post-Prune (Cursor-only layer, 2026-05-20)
+
+**Filtration applied:** removed Claude mode switching, session-init wrappers, duplicate `.mdc` always-on rules, workflow state machine prose, serialized-tool partitioning, tier tables duplicated across files, and six scattered prompt files.
+
+| Asset | Before prune | After prune |
+|-------|----------------|-------------|
+| Always-on rules | `.cursorrules` + 3× `.mdc` (~3k tokens) | `.cursorrules` (~400 tokens) + `coding.mdc` (glob only) |
+| Prompts | 6 files | 1 file (`cursor/prompts.md`) |
+| Commands | verbose | ~6 lines each |
+| Cursor scripts | `cursor-session-init.*` | removed (use `@DECISIONS.md` + terminal natively) |
+
+**Estimated Cursor config score after prune:** ~88/100 (remaining gap: legacy `CLAUDE.md` still in repo for reference; optional `hooks.json` not ported).

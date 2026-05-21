@@ -1,0 +1,11 @@
+---
+description: Code edit conventions and verification
+globs: "{src/**,tests/**,**/*.{ts,tsx,js,py}}"
+alwaysApply: false
+---
+
+Match existing patterns. Minimal diff. No TODOs in merged code.
+
+Before done: fix linter issues you introduced; run tests for touched modules; report PASS/FAIL.
+
+Details: `@IMPLEMENTATION.md` `@SAFETY.md`

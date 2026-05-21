@@ -1,23 +1,7 @@
-# AGENTS.md — Cursor / OpenSpec Entry Point
+# Agents
 
-> Cursor loads this file for agent context. Deep docs load via `@` on demand.
+Rules: `.cursorrules` + `.cursor/rules/coding.mdc`
 
-## Start here
+Deep reference (attach with `@`): `SAFETY.md`, `AGENT.md`, `IMPLEMENTATION.md`, `DECISIONS.md`
 
-1. `bash scripts/cursor-session-init.sh`
-2. `@DECISIONS.md` — last 5 ADRs
-3. `@AGENT.md` — routing and workflow states
-
-## Rule layers
-
-- Always on: `.cursor/rules/openspec-core.mdc`, `safety.mdc`
-- When coding: `implementation.mdc` (auto via globs)
-- Full policy: `@SAFETY.md`, `@IMPLEMENTATION.md`, `@CLAUDE.md` (legacy identity)
-
-## Modes
-
-See `cursor/prompts/modes/` and `CURSOR.md`.
-
-## Assessment
-
-Migration score: `cursor_migration_assessment.md` (73/100 baseline).
+Prompts: `cursor/prompts.md` · Commands: `.cursor/commands/`
